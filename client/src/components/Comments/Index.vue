@@ -1,5 +1,6 @@
 <template>
     <div>
+        <main-header navsel="back"></main-header>
         <h2>Get all comments</h2>
         <p><button v-on:click="logout">Logout</button></p>
         <h4>จำนวน comment {{comments.length}}</h4>
@@ -19,6 +20,8 @@
 </template>
 <script>
 import CommentsService from '@/services/CommentsService'
+import {mapState} from 'vuex'
+
 export default {
     data () {
         return {

@@ -134,5 +134,21 @@ module.exports = (app) => {
         }
     })
 
-    
+    app.post('/front/login',
+        UserAuthenController.clientLogin
+    )
+
+    // get comment by id
+    app.get('/comment/blog/:blogId',
+        CommentController.blog
+    )
+    // get comment by id
+    app.get('/comment/user/:userId',
+        CommentController.user
+    )
+    // users
+    // get front
+    app.get('/users/front',
+        UserController.getFront
+    )
 }

@@ -8,8 +8,12 @@ import store from './store'
 import VueResource from 'vue-resource'
 import VueCkeditor from 'vue-ckeditor2'
 import BackHeader from '@/components/Header.vue'
+import FrontHeader from '@/components/FrontHeader.vue'
+import Header from '@/components/Header.vue'
 
+Vue.component('main-header', Header)
 Vue.component('back-header', BackHeader)
+Vue.component('front-header', FrontHeader)
 Vue.config.productionTip = false
 
 Vue.use(VueResource)

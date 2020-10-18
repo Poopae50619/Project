@@ -1,9 +1,9 @@
-const { User } = require('../models')
+const { Bookborrow } = require('../models')
 module.exports = {
-    // get all user
+    // get all Bookborrow
     async index(req, res) {
         try {
-            const users = await User.findAll()
+            const users = await Bookborrow.findAll()
             res.send(users)
         } catch (err) {
             res.status(500).send({
@@ -11,21 +11,21 @@ module.exports = {
             })
         }
     },
-    // create user
+    // create Bookborrow
     async create(req, res) {
         try {
-            const user = await User.create(req.body)
-            res.send(user.toJSON())
+            const Bookborrow = await Bookborrow.create(req.body)
+            res.send(Bookborrow.toJSON())
         } catch (err) {
             res.status(500).send({
-                error: 'User already in system'
+                error: 'Bookborrow already in system'
             })
         }
     },
-    // edit user, suspend, active
+    // edit Bookborrow, suspend, active
     async put(req, res) {
         try {
-            await User.update(req.body, {
+            await Bookborrow.update(req.body, {
                 where: {
                     id: req.params.userId
                 }
@@ -33,57 +33,57 @@ module.exports = {
             res.send(req.body)
         } catch (err) {
             res.status(500).send({
-                error: 'Update user incorrect'
+                error: 'Update Bookborrow incorrect'
             })
         }
     },
-    // delete user
+    // delete Bookborrow
     async remove(req, res) {
         try {
-            const user = await User.findOne({
+            const Bookborrow = await Bookborrow.findOne({
                 where: {
                     id: req.params.userId
                 }
             })
-            if (!user) {
+            if (!Bookborrow) {
                 return res.status(403).send({
-                    error: 'The user information was incorrect'
+                    error: 'The Bookborrow information was incorrect'
                 })
             }
-            await user.destroy()
-            res.send(user)
+            await Bookborrow.destroy()
+            res.send(Bookborrow)
         } catch (err) {
             res.status(500).send({
-                error: 'The user information was incorrect'
+                error: 'The Bookborrow information was incorrect'
             })
         }
     },
-    // get user by id
+    // get Bookborrow by id
     async show(req, res) {
         try {
-            const user = await User.findById(req.params.userId)
-            res.send(user)
+            const Bookborrow = await Bookborrow.findById(req.params.userId)
+            res.send(Bookborrow)
         } catch (err) {
             req.status(500).send({
-                error: 'The user information was incorrect'
+                error: 'The Bookborrow information was incorrect'
             })
         }
     },
     async getFront(req, res) {
         try {
-            const users = await User.findAll()
+            const users = await Bookborrow.findAll()
             let listNames = []
-            users.forEach(user => {
+            users.forEach(Bookborrowuser => {
                 let name = {
-                    "id": user.id,
-                    "name": `${user.name} ${user.lastname}`
+                    "id": Bookborrow.id,
+                    "name": `${Bookborrow.name} ${Bookborrow.lastname}`
                 }
                 listNames.push(name)
             })
             res.send(listNames)
         } catch (err) {
             res.status(500).send({
-                error: 'The users information was incorrect'
+                error: 'The Bookborrow information was incorrect'
             })
         }
     },

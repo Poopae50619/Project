@@ -1,97 +1,84 @@
 <template>
   <div>
-    <main-header navsel="back"></main-header>
-    <div class="container">
-      <div class="blog-header"><br>
-        <h3>ค้นหาหนังสือ</h3>
-        <div>
-          <form class="form-inline form-search">
-            <div class="form-group">
-              <div class="input-group">
-                <input
-                  type="text"
-                  v-model="search"
-                  class="form-control"
-                  id="exampleInputAmount"
-                  placeholder="Search"
-                />
-                <div class="input-group-addon">
-                  <i class="fas fasearch"></i>
-                </div>
-              </div>
+    <main-header navsel="front"></main-header>
+    <div class="hero-wrapper">
+      <img src="@/assets/logo1.png" 
+      width="330"
+      height="250"
+      class="logo" style="float: left" />
+      
+      <br><br>
+      <h1><b>E-Books</b><br></h1>
+      <p><b>ยินดีตอนรับเข้าสู่ระบบหนังสือออนไลน์</b></p>
+    </div>
+    <div class="clearfix"></div>
+    <div class="blog-header">
+      <div>
+        <form class="form-inline form-search">
+          <span class="font2"><strong> ค้นหาหนังสือ : </strong> {{ results.length }} </span>
+          &nbsp;
+          <div class="form-group">
+            <div class="input-group">
+              <input
+                type="text"
+                v-model="search"
+                class="form-control"
+                id="exampleInputAmount"
+                placeholder="Search"
+              />
+              <div class="input-group-addon"><i class="fas fasearch"></i></div>
             </div>
-          </form>
+          </div>
+        </form>
+      </div>
+      <ul class="categories">
+        <li v-for="cate in category" v-bind:key="cate.index">
+          <a v-on: click.prevent="setCategory(cate)" href="#">{{ cate }}</a>
+        </li>
+        <li class="clear">
+          <a v-on:click.prevent="setCategory(' ')" href="#">Clear</a>
+        </li>
+      </ul>
+      <div class="clearfix"></div>
+    </div>
+    <transition-group name="fade">
+      <div v-for="blog in blogs" v-bind:key="blog.id" class="blog-list">
+        <!-- <p>id: {{ blog.id }}</p> -->
+        <div class="blog-pic">
+          <!-- <transition name="fade"> -->
+          <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
+            <img :src="BASE_URL + blog.thumbnail" alt="thumbnail" />
+          </div>
+          <!-- </transition> -->
         </div>
-        <div class="create-blog">
-          <button
-            class="btn btn-success btn-sm"
-            v-on:click="navigateTo('/blog/create')"
-          >
-            Create blog
-          </button>
-          <strong> จำนวน blog: </strong> {{ results.length }}
+        <h3>{{ blog.title }}</h3>
+        <div v-html="blog.content.slice(0, 200) + '...'"></div>
+        <div class="blog-info">
+          <p><strong>Category:</strong> {{ blog.category }}</p>
+          <p><strong>Create:</strong> {{ blog.createdAt }}</p>
+          <!-- <p>status: {{ blog.status }}</p> -->
+          <p>
+            <button
+              class="btn btn-sm btn-info"
+              v-on:click="navigateTo('/front/read/'+ blog.id)"
+            >
+              <i class="fab fa-readme"></i> View Blog
+            </button>
+          </p>
+          
         </div>
-        <ul class="categories">
-          <li v-for="cate in category" v-bind:key="cate.index">
-            <a v-on: click.prevent="setCategory(cate)" href="#">{{ cate }}</a>
-          </li>
-          <li class="clear">
-            <a v-on:click.prevent="setCategory(' ')" href="#">Clear</a>
-          </li>
-        </ul>
         <div class="clearfix"></div>
       </div>
-      <transition-group name="fade">
-        <div v-for="blog in blogs" v-bind:key="blog.id" class="blog-list">
-          <!-- <p>id: {{ blog.id }}</p> -->
-          <div class="blog-pic">
-            <!-- <transition name="fade"> -->
-            <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
-              <img :src="BASE_URL + blog.thumbnail" alt="thumbnail" />
-            </div>
-            <!-- </transition> -->
-          </div>
-          <h3>{{ blog.title }}</h3>
-          <div v-html="blog.content.slice(0, 200) + '...'"></div>
-          <div class="blog-info">
-            <p><strong>Category:</strong> {{ blog.category }}</p>
-            <p><strong>Create:</strong> {{ blog.createdAt }}</p>
-            <!-- <p>status: {{ blog.status }}</p> -->
-            <p>
-              <button
-                class="btn btn-sm btn-info"
-                v-on:click="navigateTo('/blog/' + blog.id)"
-              >
-                <i class="far fa-eye"></i>
-                View Blog
-              </button>
-              <button
-                class="btn btn-sm btn-warning"
-                v-on:click="navigateTo('/blog/edit/' + blog.id)"
-              >
-                Edit blog
-              </button>
-              <button
-                class="btn btn-sm btn-danger"
-                v-on:click="deleteBlog(blog)"
-              >
-                Delete
-              </button>
-            </p>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-      </transition-group>
-      <div v-if="blogs.length === 0 && loading === false" class="emptyblog">
-        *** ไม่มีข้อมูล ***
-      </div>
-      <div id="blog-list-bottom">
-        <div
-          class="blog-load-finished"
-          v-if="blogs.length === results.length && results.length > 0"
-        >
-          โหลดข้อมูลครบแล้ว
-        </div>
+    </transition-group>
+    <div v-if="blogs.length === 0 && loading === false" class="emptyblog">
+      *** ไม่มีข้อมูล ***
+    </div>
+    <div id="blog-list-bottom">
+      <div
+        class="blog-load-finished"
+        v-if="blogs.length === results.length && results.length > 0"
+      >
+        <span class="font3">โหลดข้อมูลครบแล้ว</span>
       </div>
     </div>
   </div>
@@ -106,7 +93,7 @@ export default {
   watch: {
     search: _.debounce(async function (value) {
       const route = {
-        name: "blogs",
+        name: "front",
       };
       if (this.search !== "") {
         route.query = {
@@ -154,11 +141,6 @@ export default {
   // this.blogs = (await BlogsService.index()).data
   // },
   methods: {
-    wait(ms) {
-      return (x) => {
-        return new Promise((resolve) => setTimeout(() => resolve(x), ms));
-      };
-    },
     appendResults: function () {
       if (this.blogs.length < this.results.length) {
         let toAppend = this.results.slice(
@@ -205,6 +187,27 @@ export default {
 };
 </script>
 <style scoped>
+.component-wrapper {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.hero-wrapper {
+  margin-top: 80px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 5px;
+  background: #ee7811;
+  height: 250px;
+  color: white;
+  padding: 20px;
+}
+.hero h1 {
+  margin-top: 30px;
+}
+.logo {
+  padding-right: 20px;
+}
 .empty-blog {
   width: 100%;
   text-align: center;
@@ -215,7 +218,9 @@ export default {
 /* thumbnail */
 .thumbnail-pic img {
   width: 200px;
-  padding: 5px 10px 0px 0px;
+  padding: 5px 5px 5px 5px;
+  border: solid 1px #ccc;
+  margin: 10px 10px 0px 0px;
 }
 .blog-info {
   float: left;
@@ -229,12 +234,15 @@ export default {
 .blog-list {
   border: solid 1px #dfdfdf;
   margin-bottom: 10px;
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
   padding: 5px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
 .blog-header {
+  margin-top: 80px;
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -248,7 +256,7 @@ export default {
   color: white;
 }
 .categories {
-  margin-top: 10px;
+  margin-top: 20px;
   padding: 0;
   list-style: none;
   float: left;
@@ -269,5 +277,10 @@ export default {
 }
 .create-blog {
   margin-top: 10px;
+}
+@media (max-width: 768px) {
+  .logo {
+    width: 120px;
+  }
 }
 </style>
